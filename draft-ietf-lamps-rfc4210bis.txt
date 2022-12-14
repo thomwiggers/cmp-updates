@@ -1679,12 +1679,12 @@ Table of Contents
 
    < Q: In this case, both PKI entities require a certificate of the
    other side and send a symmetric key in form of a KEM encapsulated
-   cyphertext according to Hybrid Public Key Encryption [RFC9180] to the
+   ciphertext according to Hybrid Public Key Encryption [RFC9180] to the
    respective recipient.  Each sender uses the SendExportBase to get the
    fixed-length symmetric key (the KEM shared secret) and a fixed-length
    encapsulation of that key and provide it to the recipient using the
    id-it-KEMCiphertext as defined in Section 5.19.18.  The respective
-   recipient uses ReviepExportBase to recover the ephemeral symmetric
+   recipient uses ReveipExportBase to recover the ephemeral symmetric
    key (the KEM shared secret) from the encapsulated representation
    received from the sender.  Both functions are used as specified in
    RFC 9180 Section 6.2 [RFC9180].  The symmetric key resulting from the
