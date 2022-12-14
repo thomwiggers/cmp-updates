@@ -1708,7 +1708,7 @@ Table of Contents
        kem              AlgorithmIdentifier,
        -- AlgId for a Key Encapsulation Mechanism
        kdf              AlgorithmIdentifier,
-       -- AlgId for a Key Derication Function
+       -- AlgId for a Key Derivation Function
        enc              OCTET STRING
        -- Encrypted symmetric key from HPKE SendExportBase
      }
@@ -1841,11 +1841,11 @@ Table of Contents
        PKI management operation.
 
        The request message is of any type.  The generalInfo field
-       contains a ITAV element of type id-it-HpkeCiphertext and the
-       value is of type HpkeCiphertext containing OIDs of the used KEM
-       and KDF functions and the ciphertext enc2.  The message has a
-       MAC-based protection using the protectionAlg id-hpke-mac and the
-       shared secret ss2.
+       contains a InfoTypeAndValue element of type id-it-HpkeCiphertext
+       and the value is of type HpkeCiphertext containing OIDs of the
+       used KEM and KDF functions and the ciphertext enc2.  The message
+       has a MAC-based protection using the protectionAlg id-hpke-mac
+       and the shared secret ss2.
 
    4.  PKI management entity concatenates the shared secret ss1, with
        the transactionID, the senderNonce genp_senderNonce, and the
