@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-18T00:30:21.966976+00:00",
+  "timestamp": "2022-12-20T00:31:35.815463+00:00",
   "repo": "lamps-wg/cmp-updates",
   "labels": [
     {
@@ -50,5 +50,49 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOInbtzM5Ft3B5",
+      "title": "KEM combiner reduction",
+      "url": "https://github.com/lamps-wg/cmp-updates/pull/1",
+      "state": "OPEN",
+      "author": "ounsworth",
+      "authorAssociation": "NONE",
+      "assignees": [
+        "HBrock"
+      ],
+      "labels": [],
+      "body": "I wrote a paragraph that does a security reduction of this KEM combiner to draft-ounsworth-cfrg-kem-combiner.",
+      "createdAt": "2022-12-18T00:43:13Z",
+      "updatedAt": "2022-12-19T07:02:52Z",
+      "baseRepository": "lamps-wg/cmp-updates",
+      "baseRefName": "main",
+      "baseRefOid": "22e82936eef53f15418d6c352411c90762b8451b",
+      "headRepository": "lamps-wg/cmp-updates",
+      "headRefName": "mike_kem_reduction",
+      "headRefOid": "261e10590b8119c52995aeb878c1c8f3c6869029",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "NONE",
+          "body": "@HBrock I wrote some text, but I am not very familiar with the XML I-D format. Are you willing to add the cross-references, and move some of that text into an appendix?",
+          "createdAt": "2022-12-18T00:44:40Z",
+          "updatedAt": "2022-12-18T00:44:40Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> @HBrock [...] move some of that text into an appendix?\r\n\r\nThank you for your proposal. I will merge it. Should I move the text to a new Section 8.8 or should I introduce a new Appendix C?",
+          "createdAt": "2022-12-19T07:02:52Z",
+          "updatedAt": "2022-12-19T07:02:52Z"
+        }
+      ],
+      "reviews": []
+    }
+  ]
 }
