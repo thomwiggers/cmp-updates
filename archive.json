@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-20T00:31:35.815463+00:00",
+  "timestamp": "2022-12-22T00:31:58.907834+00:00",
   "repo": "lamps-wg/cmp-updates",
   "labels": [
     {
@@ -49,37 +49,56 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 2,
+      "id": "I_kwDOInbtzM5ZzEGp",
+      "title": "Ephemeral KEM key pair for HPKE",
+      "url": "https://github.com/lamps-wg/cmp-updates/issues/2",
+      "state": "OPEN",
+      "author": "HBrock",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Antonio pointed me again at https://eprint.iacr.org/2017/634.pdf. \r\nIn figure 3 an authenticated key exchange protocol is described where both parties are authenticated. There P1 generates an ephemeral KEM key pair pk/sk and sends it together with of the encrypted value using P2's public KEM key to P2. In return P2 sends two encrypted values, one using the ephemeral public key pk and one using the public KEM key of P1. Finally all concatenate the three resulting keys using a hash function.\r\nShould we extend Section 5.1.3.4 accordingly also adding an ephemeral KEM key?",
+      "createdAt": "2022-12-21T16:09:59Z",
+      "updatedAt": "2022-12-21T16:09:59Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": [
     {
       "number": 1,
       "id": "PR_kwDOInbtzM5Ft3B5",
       "title": "KEM combiner reduction",
       "url": "https://github.com/lamps-wg/cmp-updates/pull/1",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "ounsworth",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [
         "HBrock"
       ],
       "labels": [],
       "body": "I wrote a paragraph that does a security reduction of this KEM combiner to draft-ounsworth-cfrg-kem-combiner.",
       "createdAt": "2022-12-18T00:43:13Z",
-      "updatedAt": "2022-12-19T07:02:52Z",
+      "updatedAt": "2022-12-20T09:40:28Z",
       "baseRepository": "lamps-wg/cmp-updates",
       "baseRefName": "main",
       "baseRefOid": "22e82936eef53f15418d6c352411c90762b8451b",
       "headRepository": "lamps-wg/cmp-updates",
       "headRefName": "mike_kem_reduction",
       "headRefOid": "261e10590b8119c52995aeb878c1c8f3c6869029",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-12-20T09:40:28Z",
+      "mergedAt": "2022-12-20T09:40:28Z",
+      "mergedBy": "HBrock",
+      "mergeCommit": {
+        "oid": "2e484d625646636dc6de31991ee2a8397ffab542"
+      },
       "comments": [
         {
           "author": "ounsworth",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "@HBrock I wrote some text, but I am not very familiar with the XML I-D format. Are you willing to add the cross-references, and move some of that text into an appendix?",
           "createdAt": "2022-12-18T00:44:40Z",
           "updatedAt": "2022-12-18T00:44:40Z"
@@ -90,6 +109,13 @@
           "body": "> @HBrock [...] move some of that text into an appendix?\r\n\r\nThank you for your proposal. I will merge it. Should I move the text to a new Section 8.8 or should I introduce a new Appendix C?",
           "createdAt": "2022-12-19T07:02:52Z",
           "updatedAt": "2022-12-19T07:02:52Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I will merge your changes.\r\nAfter the merge I will update the references and move the second paragraph to the Security Considerations section.",
+          "createdAt": "2022-12-20T09:40:08Z",
+          "updatedAt": "2022-12-20T09:40:08Z"
         }
       ],
       "reviews": []
