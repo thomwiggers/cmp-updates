@@ -7,8 +7,8 @@ Internet-Draft                                             D. von Oheimb
 Obsoletes: 4210 (if approved)                                    Siemens
 Updates: 5912 (if approved)                                 M. Ounsworth
 Intended status: Standards Track                                 J. Gray
-Expires: 23 June 2023                                            Entrust
-                                                        20 December 2022
+Expires: 14 July 2023                                            Entrust
+                                                         10 January 2023
 
 
    Internet X.509 Public Key Infrastructure -- Certificate Management
@@ -40,6 +40,18 @@ Abstract
    Appendix F of this document contains the updated 2002 ASN.1 module
    originating from RFC 5912.
 
+Discussion Venues
+
+   This note is to be removed before publishing as an RFC.
+
+   Discussion of this document takes place on the Limited Additional
+   Mechanisms for PKIX and SMIME Working Group mailing list
+   (spasm@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/spasm/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/lamps-wg/cmp-updates.
+
 Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
@@ -55,11 +67,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 June 2023.
+   This Internet-Draft will expire on 14 July 2023.
 
 Copyright Notice
 
-   Copyright (c) 2022 IETF Trust and the persons identified as the
+   Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -259,23 +271,23 @@ Table of Contents
 
    Please perform the following substitution.
 
-   *  RFCXXXX --> the assigned numerical RFC value for this draft
+   *  RFCXXXX ---> the assigned numerical RFC value for this draft
 
-   *  RFCAAAA --> the assigned numerical RFC value for
+   *  RFCAAAA ---> the assigned numerical RFC value for
       [I-D.ietf-lamps-cmp-updates]
 
       Add this RFC number to the list of obsoleted RFCs.
 
-   *  RFCBBBB --> the assigned numerical RFC value for
+   *  RFCBBBB ---> the assigned numerical RFC value for
       [I-D.ietf-lamps-lightweight-cmp-profile]
 
-   *  RFCCCCC --> the assigned numerical RFC value for
+   *  RFCCCCC ---> the assigned numerical RFC value for
       [I-D.ietf-lamps-cmp-algorithms]
 
-   *  RFCDDDD --> the assigned numerical RFC value for
+   *  RFCDDDD ---> the assigned numerical RFC value for
       [I-D.ietf-lamps-rfc6712bis]
 
-   *  RFCEEEE --> the assigned numerical RFC value for
+   *  RFCEEEE ---> the assigned numerical RFC value for
       [I-D.ietf-ace-cmpv2-coap-transport]
 
    ]
@@ -373,8 +385,8 @@ Table of Contents
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in BCP
-   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
 3.  PKI Management Overview
@@ -429,14 +441,14 @@ Table of Contents
    cross-certificate.  Where appropriate, the term "end entity" will be
    used to refer to end entities who are not PKI management entities.
 
-   All end entities require secure local access to some information --
+   All end entities require secure local access to some information ---
    at a minimum, their own name and private key, the name of a CA that
    is directly trusted by this entity, and that CA's public key (or a
    fingerprint of the public key where a self-certified version is
    available elsewhere).  Implementations MAY use secure local storage
    for more than this minimum (e.g., the end entity's own certificates
    or application-specific information).  The form of storage will also
-   vary -- from files to tamper-resistant cryptographic tokens.  The
+   vary --- from files to tamper-resistant cryptographic tokens.  The
    information stored in such local, trusted storage is referred to here
    as the end entity's Personal Security Environment (PSE).
 
@@ -2223,10 +2235,10 @@ Table of Contents
    By having the CA return not the certificate, but an encrypted
    certificate (i.e., the certificate encrypted under a randomly-
    generated symmetric key, and the symmetric key encrypted under the
-   public key for which the certification request is being made) -- this
-   is the "indirect" method mentioned previously in Section 4.3.2.  The
-   end entity proves knowledge of the private decryption key to the CA
-   by providing the correct CertHash for this certificate in the
+   public key for which the certification request is being made) ---
+   this is the "indirect" method mentioned previously in Section 4.3.2.
+   The end entity proves knowledge of the private decryption key to the
+   CA by providing the correct CertHash for this certificate in the
    certConf message.  This demonstrates POP because the EE can only
    compute the correct CertHash if it is able to recover the
    certificate, and it can only recover the certificate if it is able to
@@ -2239,7 +2251,7 @@ Table of Contents
 
    By having the end entity engage in a challenge-response protocol
    (using the messages POPODecKeyChall and POPODecKeyResp; see below)
-   between CertReqMessages and CertRepMessage -- this is the "direct"
+   between CertReqMessages and CertRepMessage --- this is the "direct"
    method mentioned previously in Section 4.3.2.  (This method would
    typically be used in an environment in which an RA verifies POP and
    then makes a certification request to the CA on behalf of the end
@@ -2647,7 +2659,7 @@ Table of Contents
 5.3.17.  PKI Confirmation Content
 
    This data structure is used in the protocol exchange as the final
-   PKIMessage.  Its content is the same in all cases -- actually there
+   PKIMessage.  Its content is the same in all cases --- actually there
    is no content since the PKIHeader carries all the required
    information.
 
@@ -2886,7 +2898,6 @@ Table of Contents
    The id-regCtrl-rsaKeyLen control SHALL be used for algorithm
    rsaEncryption and SHALL contain the intended modulus bit length of
    the RSA key.
-
 
      GenMsg:    {id-it 19}, < absent >
      GenRep:    {id-it 19}, CertReqTemplateContent | < absent >
@@ -3479,12 +3490,12 @@ Table of Contents
    whether or not the CA/RA can be trusted to handle such material
    appropriately).  Implementers are advised to:
 
-      Exercise caution in selecting and using this particular POP
-      mechanism
+   : Exercise caution in selecting and using this particular POP
 
-      When appropriate, have the user of the application explicitly
-      state that they are willing to trust the CA/RA to have a copy of
-      their private key before proceeding to reveal the private key.
+   mechanism  When appropriate, have the user of the application
+      explicitly state that they are willing to trust the CA/RA to have
+      a copy of their private key before proceeding to reveal the
+      private key.
 
 8.3.  Attack Against Diffie-Hellman Key Exchange
 
@@ -3525,7 +3536,7 @@ Table of Contents
    consequences of low-entropy random numbers are discussed in Mining
    Your Ps and Qs [MiningPsQs].  The generation of quality random
    numbers is difficult.  ISO/IEC 20543:2019 [ISO.20543-2019], NIST SP
-   800-90A Rev.1 [NIST_SP_800_90Ar1], BSI AIS 31 V2.0 [AIS31], and
+   800-90A Rev.1 [NIST.SP.800-90Ar1], BSI AIS 31 V2.0 [AIS31], and
    others offer valuable guidance in this area.
 
    If shared secret information is generated by a cryptographically
@@ -3643,65 +3654,56 @@ Table of Contents
 
 11.1.  Normative References
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
    [RFC2985]  Nystrom, M. and B. Kaliski, "PKCS #9: Selected Object
               Classes and Attribute Types Version 2.0", RFC 2985,
               DOI 10.17487/RFC2985, November 2000,
-              <https://www.rfc-editor.org/info/rfc2985>.
+              <https://www.rfc-editor.org/rfc/rfc2985>.
 
    [RFC2986]  Nystrom, M. and B. Kaliski, "PKCS #10: Certification
               Request Syntax Specification Version 1.7", RFC 2986,
               DOI 10.17487/RFC2986, November 2000,
-              <https://www.rfc-editor.org/info/rfc2986>.
+              <https://www.rfc-editor.org/rfc/rfc2986>.
 
    [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO
               10646", STD 63, RFC 3629, DOI 10.17487/RFC3629, November
-              2003, <https://www.rfc-editor.org/info/rfc3629>.
+              2003, <https://www.rfc-editor.org/rfc/rfc3629>.
 
    [RFC4211]  Schaad, J., "Internet X.509 Public Key Infrastructure
               Certificate Request Message Format (CRMF)", RFC 4211,
               DOI 10.17487/RFC4211, September 2005,
-              <https://www.rfc-editor.org/info/rfc4211>.
+              <https://www.rfc-editor.org/rfc/rfc4211>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
-              <https://www.rfc-editor.org/info/rfc5280>.
+              <https://www.rfc-editor.org/rfc/rfc5280>.
 
    [RFC5480]  Turner, S., Brown, D., Yiu, K., Housley, R., and T. Polk,
               "Elliptic Curve Cryptography Subject Public Key
               Information", RFC 5480, DOI 10.17487/RFC5480, March 2009,
-              <https://www.rfc-editor.org/info/rfc5480>.
+              <https://www.rfc-editor.org/rfc/rfc5480>.
 
    [RFC5652]  Housley, R., "Cryptographic Message Syntax (CMS)", STD 70,
               RFC 5652, DOI 10.17487/RFC5652, September 2009,
-              <https://www.rfc-editor.org/info/rfc5652>.
+              <https://www.rfc-editor.org/rfc/rfc5652>.
 
    [RFC5958]  Turner, S., "Asymmetric Key Packages", RFC 5958,
               DOI 10.17487/RFC5958, August 2010,
-              <https://www.rfc-editor.org/info/rfc5958>.
+              <https://www.rfc-editor.org/rfc/rfc5958>.
 
    [RFC6402]  Schaad, J., "Certificate Management over CMS (CMC)
               Updates", RFC 6402, DOI 10.17487/RFC6402, November 2011,
-              <https://www.rfc-editor.org/info/rfc6402>.
-
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+              <https://www.rfc-editor.org/rfc/rfc6402>.
 
    [RFC8933]  Housley, R., "Update to the Cryptographic Message Syntax
               (CMS) for Algorithm Identifier Protection", RFC 8933,
               DOI 10.17487/RFC8933, October 2020,
-              <https://www.rfc-editor.org/info/rfc8933>.
+              <https://www.rfc-editor.org/rfc/rfc8933>.
 
    [RFC9180]  Barnes, R., Bhargavan, K., Lipp, B., and C. Wood, "Hybrid
               Public Key Encryption", RFC 9180, DOI 10.17487/RFC9180,
-              February 2022, <https://www.rfc-editor.org/info/rfc9180>.
+              February 2022, <https://www.rfc-editor.org/rfc/rfc9180>.
 
    [ITU.X509.2000]
               International Telecommunications Union, "Information
@@ -3721,6 +3723,15 @@ Table of Contents
    [MvOV97]   Menezes, A., van Oorschot, P., and S. Vanstone, "Handbook
               of Applied Cryptography", CRC Press ISBN 0-8493-8523-7,
               1996.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
 11.2.  Informative References
 
@@ -3764,34 +3775,34 @@ Table of Contents
    [RFC1847]  Galvin, J., Murphy, S., Crocker, S., and N. Freed,
               "Security Multiparts for MIME: Multipart/Signed and
               Multipart/Encrypted", RFC 1847, DOI 10.17487/RFC1847,
-              October 1995, <https://www.rfc-editor.org/info/rfc1847>.
+              October 1995, <https://www.rfc-editor.org/rfc/rfc1847>.
 
    [RFC2510]  Adams, C. and S. Farrell, "Internet X.509 Public Key
               Infrastructure Certificate Management Protocols",
               RFC 2510, DOI 10.17487/RFC2510, March 1999,
-              <https://www.rfc-editor.org/info/rfc2510>.
+              <https://www.rfc-editor.org/rfc/rfc2510>.
 
    [RFC4210]  Adams, C., Farrell, S., Kause, T., and T. Mononen,
               "Internet X.509 Public Key Infrastructure Certificate
               Management Protocol (CMP)", RFC 4210,
               DOI 10.17487/RFC4210, September 2005,
-              <https://www.rfc-editor.org/info/rfc4210>.
+              <https://www.rfc-editor.org/rfc/rfc4210>.
 
    [RFC4510]  Zeilenga, K., Ed., "Lightweight Directory Access Protocol
               (LDAP): Technical Specification Road Map", RFC 4510,
               DOI 10.17487/RFC4510, June 2006,
-              <https://www.rfc-editor.org/info/rfc4510>.
+              <https://www.rfc-editor.org/rfc/rfc4510>.
 
    [RFC5912]  Hoffman, P. and J. Schaad, "New ASN.1 Modules for the
               Public Key Infrastructure Using X.509 (PKIX)", RFC 5912,
               DOI 10.17487/RFC5912, June 2010,
-              <https://www.rfc-editor.org/info/rfc5912>.
+              <https://www.rfc-editor.org/rfc/rfc5912>.
 
    [RFC8649]  Housley, R., "Hash Of Root Key Certificate Extension",
               RFC 8649, DOI 10.17487/RFC8649, August 2019,
-              <https://www.rfc-editor.org/info/rfc8649>.
+              <https://www.rfc-editor.org/rfc/rfc8649>.
 
-   [NIST_SP_800_90Ar1]
+   [NIST.SP.800-90Ar1]
               Barker, E. B., Kelsey, J. M., and NIST, "Recommendation
               for Random Number Generation Using Deterministic Random
               Bit Generators", NIST Special Publications
@@ -3803,12 +3814,12 @@ Table of Contents
    [IEEE.802.1AR_2018]
               IEEE, "IEEE Standard for Local and metropolitan area
               networks - Secure Device Identity", IEEE 802.1AR-2018,
-              DOI 10.1109/IEEESTD.2018.8423794, 2 August 2018,
+              DOI 10.1109/IEEESTD.2018.8423794, August 2018,
               <https://ieeexplore.ieee.org/document/8423794>.
 
    [CVE-2008-0166]
               National Institute of Science and Technology (NIST),
-              "National Vulnerability Database - CVE-2008-0166", 13 May
+              "National Vulnerability Database - CVE-2008-0166", May
               2008, <https://nvd.nist.gov/vuln/detail/CVE-2008-0166>.
 
    [MiningPsQs]
@@ -3829,7 +3840,7 @@ Table of Contents
    [AIS31]    Bundesamt fuer Sicherheit in der Informationstechnik
               (BSI), Killmann, W., and W. Schindler, "A proposal for:
               Functionality classes for random number generators,
-              version 2.0", 18 September 2011,
+              version 2.0", September 2011,
               <https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/
               Zertifizierung/Interpretationen/AIS_31_Functionality_class
               es_for_random_number_generators_e.pdf>.
@@ -3885,8 +3896,8 @@ Appendix B.  The Use of Revocation Passphrase
    A revocation request must incorporate suitable security mechanisms,
    including proper authentication, in order to reduce the probability
    of successful denial-of-service attacks.  A digital signature on the
-   request -- REQUIRED to support within this specification if
-   revocation requests are supported -- can provide the authentication
+   request --- REQUIRED to support within this specification if
+   revocation requests are supported --- can provide the authentication
    required, but there are circumstances under which an alternative
    mechanism may be desirable (e.g., when the private key is no longer
    accessible and the entity wishes to request a revocation prior to re-
@@ -4139,7 +4150,7 @@ C.4.  Initial Registration/Certification (Basic Authenticated Scheme)
    name in the certificate template.  See Section 8.5 for security
    considerations on quality of shared secret information.
 
-   Initialization Request -- ir
+   Initialization Request --- ir
 
    Field                Value
 
@@ -4221,7 +4232,7 @@ C.4.  Initial Registration/Certification (Basic Authenticated Scheme)
    protection           present
      -- bits calculated using MSG_MAC_ALG
 
-   Initialization Response -- ip
+   Initialization Response --- ip
 
    Field                Value
 
@@ -4302,7 +4313,7 @@ C.4.  Initial Registration/Certification (Basic Authenticated Scheme)
      -- the CA MAY provide additional certificates to the end
      -- entity
 
-   Certificate confirm -- certConf
+   Certificate confirm --- certConf
 
    Field                Value
 
@@ -4334,7 +4345,7 @@ C.4.  Initial Registration/Certification (Basic Authenticated Scheme)
    protection           present
      -- bits calculated using MSG_MAC_ALG
 
-   Confirmation -- PKIConf
+   Confirmation --- PKIConf
 
    Field                Value
 
@@ -4417,8 +4428,8 @@ C.6.  Key Update Request
        field;
 
    7.  regCtrl OldCertId SHOULD be used (unless it is clear to both
-       sender and receiver -- by means not specified in this document --
-       that it is not needed).
+       sender and receiver --- by means not specified in this document
+       --- that it is not needed).
 
 Appendix D.  PKI Management Message Profiles (OPTIONAL)
 
@@ -5428,8 +5439,10 @@ Appendix F.  History of Changes
    From version 03 -> 04:
 
    *  Addes Section 4.3.4 regarding POP for KEM keys
+
    *  Added Section 5.1.3.4 on message protection using KEM keys and
       HPKE
+
    *  Deleted former Appendix C as announced in the -03
 
    From version 02 -> 03:
@@ -5437,34 +5450,47 @@ Appendix F.  History of Changes
    *  Updated Section 4.4.1 clarifying the definition of "new with new"
       certificate validity period (see thread "RFC4210bis - notAfter
       time of newWithNew certificate")
+
    *  Added ToDo to Section 4.3 and 5.2.8 on required alignment
       regarding POP for KEM keys.
+
    *  Updated Sections 5.2.1, 5.2.8, and 5.2.8.1 incorporating text of
       former Appendix C (see thread "draft-ietf-lamps-rfc4210bis - ToDo
       on review of Appendix C")
+
    *  Added a ToDo to Appendix B to indicate additional review need to
       try pushing the content to Sections 4 and Section 5
 
    From version 01 -> 02:
 
    *  Added Section 3.1.1.4 introducing the Key Generation Authority
+
    *  Added Section 5.1.1.3 containing description of origPKIMessage
       content moved here from Section 5.1.3.4
+
    *  Added ToDos on defining POP and message protection using KEM keys
+
    *  Added a ToDo to Section 4.4.3
+
    *  Added a ToDo to Appendix C to do a more detailed review
+
    *  Removed concrete algorithms and referred to CMP Algorithms instead
+
    *  Added references to Appendix D and E as well as the Lightweight
       CMP Profile for further information
+
    *  Broaden the scope from human users also to devices and services
+
    *  Addressed idnits feedback, specifically changing from historic
       LDAP V2 to LDAP V3 (RFC4510)
+
    *  Did some further editorial alignment to the XML
 
    From version 00 -> 01:
 
    *  Performed all updates specified in CMP Updates Section 2 and
       Appendix A.2.
+
    *  Did some editorial allignment to the XML
 
    Version 00:
@@ -5474,8 +5500,10 @@ Appendix F.  History of Changes
 
    *  Introduced the authors of this document and thanked the authors of
       RFC4210 for their work.
+
    *  Added a paragraph to the introduction explaining the background of
       this document.
+
    *  Added the change history to this appendix.
 
 Authors' Addresses
