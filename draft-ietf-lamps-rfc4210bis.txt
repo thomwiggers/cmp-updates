@@ -3802,10 +3802,7 @@ Table of Contents
               NIST.SP.800-90Ar1.pdf>.
 
    [IEEE.802.1AR_2018]
-              IEEE, "IEEE Standard for Local and metropolitan area
-              networks - Secure Device Identity", IEEE 802.1AR-2018,
-              DOI 10.1109/IEEESTD.2018.8423794, August 2018,
-              <https://ieeexplore.ieee.org/document/8423794>.
+              "*** BROKEN REFERENCE ***".
 
    [CVE-2008-0166]
               National Institute of Science and Technology (NIST),
@@ -3821,11 +3818,7 @@ Table of Contents
               technical-sessions/presentation/heninger>.
 
    [ISO.20543-2019]
-              International Organization for Standardization (ISO),
-              "Information technology -- Security techniques -- Test and
-              analysis methods for random bit generators within ISO/IEC
-              19790 and ISO/IEC 15408", ISO Draft Standard 20543-2019,
-              October 2019.
+              "*** BROKEN REFERENCE ***".
 
    [AIS31]    Bundesamt fuer Sicherheit in der Informationstechnik
               (BSI), Killmann, W., and W. Schindler, "A proposal for:
