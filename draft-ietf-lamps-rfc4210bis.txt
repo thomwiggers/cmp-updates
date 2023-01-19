@@ -134,7 +134,7 @@ Table of Contents
          5.1.1.4.  CertProfile
        5.1.2.  PKI Message Body
        5.1.3.  PKI Message Protection
-         5.1.3.1.  Shared Secret Information
+         5.1.3.1.  Pre-Shared Secret Information
          5.1.3.2.  Key Agreement
          5.1.3.3.  Signature
          5.1.3.4.  Key Encapsulation
@@ -1639,12 +1639,12 @@ Table of Contents
    Message Authentication Code (MAC) or signature.  Only the following
    cases can occur:
 
-5.1.3.1.  Shared Secret Information
+5.1.3.1.  Pre-Shared Secret Information
 
    In this case, the sender and recipient share secret information with
    sufficient entropy (established via out-of-band means).
    PKIProtection will contain a MAC value and the protectionAlg MAY be
-   one of the options described in CMP Algorithms Section 6 [RFCCCCC].
+   one of the options described in CMP Algorithms Section 6.1 [RFCCCCC].
 
 5.1.3.2.  Key Agreement
 
