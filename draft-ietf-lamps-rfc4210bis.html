@@ -47,7 +47,7 @@ from RFC 5912.
     requests 2.28.1
     setuptools 65.6.0
     six 1.16.0
-    wcwidth 0.2.5
+    wcwidth 0.2.6
 -->
 <link href="draft-ietf-lamps-rfc4210bis.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -391,7 +391,7 @@ dl {
 dl > dt {
   float: left;
   margin-right: 1em;
-  min-width: 12ch;
+  min-width: 8ch;
 }
 dl.dlNewline > dt {
   float: none;
@@ -1060,7 +1060,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Brockhaus, et al.</td>
-<td class="center">Expires 14 July 2023</td>
+<td class="center">Expires 23 July 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1079,12 +1079,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc5912" class="eref">5912</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-01-10" class="published">10 January 2023</time>
+<time datetime="2023-01-19" class="published">19 January 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-07-14">14 July 2023</time></dd>
+<dd class="expires"><time datetime="2023-07-23">23 July 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1158,7 +1158,7 @@ from RFC 5912.<a href="#section-abstract-4" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 July 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 July 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -3352,30 +3352,15 @@ HpkeCiphertext.  The syntax for HpkeCiphertext is as follows:<a href="#section-5
   }
 </pre><a href="#section-5.1.3.4-6" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.3.4-7">The object identifier used in protectionAlg for the MAC-based message protection
-with HPKE-based key exchange is id-hpke-mac, which is defined in this document
-as:<a href="#section-5.1.3.4-7" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-8">
-<pre>
-  id-hpke-mac OBJECT IDENTIFIER ::= { TBD2 }
-</pre><a href="#section-5.1.3.4-8" class="pilcrow">¶</a>
-</div>
-<p id="section-5.1.3.4-9">When id-hpke-mac is used, the parameters <span class="bcp14">MUST</span> employ the HpkeMacParameter
-syntax.  The syntax for HpkeMacParameter is as follows:<a href="#section-5.1.3.4-9" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-10">
-<pre>
-  HpkeMacParameter ::= SEQUENCE {
-     mac                 AlgorithmIdentifier
-     -- the MAC AlgId
-  }
-</pre><a href="#section-5.1.3.4-10" class="pilcrow">¶</a>
-</div>
-<p id="section-5.1.3.4-11">The message flow establishing a shared symmetric key consists of an additional
+<p id="section-5.1.3.4-7">The messages protected using the key derived from the HPKE-exchanges will contain a MAC value in
+PKIProtection and the protectionAlg <span class="bcp14">MAY</span> be one of the options described
+in CMP Algorithms Section 6.2 [RFCCCCC].<a href="#section-5.1.3.4-7" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-8">The message flow establishing a shared symmetric key consists of an additional
 genm/genp with no protection and the desired request/response messages with
-MAC-based protection and looks like this:<a href="#section-5.1.3.4-11" class="pilcrow">¶</a></p>
+MAC-based protection and looks like this:<a href="#section-5.1.3.4-8" class="pilcrow">¶</a></p>
 <span id="name-message-flow-establishing-a"></span><div id="HPKE">
 <figure id="figure-2">
-              <div class="alignLeft art-text artwork" id="section-5.1.3.4-12.1">
+              <div class="alignLeft art-text artwork" id="section-5.1.3.4-9.1">
 <pre>
 Message Flow:
 
@@ -3419,126 +3404,126 @@ Step# PKI entity                           PKI management entity
 <a href="#name-message-flow-establishing-a" class="selfRef">Message flow establishing a shared symmetric key for MAC-based protection</a>
               </figcaption></figure>
 </div>
-<ol start="1" type="1" class="normal type-1" id="section-5.1.3.4-13">
-<li id="section-5.1.3.4-13.1">The PKI entity formats a genm message of type id-it-HPKECiphertext and the
+<ol start="1" type="1" class="normal type-1" id="section-5.1.3.4-10">
+<li id="section-5.1.3.4-10.1">The PKI entity formats a genm message of type id-it-HPKECiphertext and the
   value is absent.  The message has no protection and the extraCerts field
-  contains the client KEM-certificate kemCertC.<a href="#section-5.1.3.4-13.1" class="pilcrow">¶</a>
+  contains the client KEM-certificate kemCertC.<a href="#section-5.1.3.4-10.1" class="pilcrow">¶</a>
 </li>
-              <li id="section-5.1.3.4-13.2">
-                <p id="section-5.1.3.4-13.2.1">The PKI management entity validates the client certificate kemCertC.<a href="#section-5.1.3.4-13.2.1" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.2.2">
+              <li id="section-5.1.3.4-10.2">
+                <p id="section-5.1.3.4-10.2.1">The PKI management entity validates the client certificate kemCertC.<a href="#section-5.1.3.4-10.2.1" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.2.2">
 The PKI management entity concatenates the transactionID and senderNonce
-genm_senderNonce from the PKIHeader of the recieved genm message to context1.<a href="#section-5.1.3.4-13.2.2" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-13.2.3">
+genm_senderNonce from the PKIHeader of the recieved genm message to context1.<a href="#section-5.1.3.4-10.2.2" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-10.2.3">
 <pre>
   context1 = concat(transactionID, genm_senderNonce)
-</pre><a href="#section-5.1.3.4-13.2.3" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.3.4-10.2.3" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.3.4-13.2.4">
+<p id="section-5.1.3.4-10.2.4">
 Note: The function concat(x0, ..., xN) concatenates the byte strings as specified
-in RFC 9180 Section 3 <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-5.1.3.4-13.2.4" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.2.5">
+in RFC 9180 Section 3 <span>[<a href="#RFC9180" class="cite xref">RFC9180</a>]</span>.<a href="#section-5.1.3.4-10.2.4" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.2.5">
 It generates a shared secret ss1 and the associated ciphertext enc1 using
-the HPKE export function SendExportBase and the clients public key pkC:<a href="#section-5.1.3.4-13.2.5" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-13.2.6">
+the HPKE export function SendExportBase and the clients public key pkC:<a href="#section-5.1.3.4-10.2.5" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-10.2.6">
 <pre>
   SendExportBase(pkC, "round1", context1, L) = (enc1, ss1)
-</pre><a href="#section-5.1.3.4-13.2.6" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.3.4-10.2.6" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.3.4-13.2.7">
+<p id="section-5.1.3.4-10.2.7">
 Note: L <span class="bcp14">SHOULD</span> be the maximum key length of the MAC function to be used for
 MAC-based message protection, but it <span class="bcp14">MUST NOT</span> be bigger that 255*Nh, where
-Nh is the output size of the extract function of the uses KDF.<a href="#section-5.1.3.4-13.2.7" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.2.8">
+Nh is the output size of the extract function of the uses KDF.<a href="#section-5.1.3.4-10.2.7" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.2.8">
 The genp message is of type id-it-HpkeCiphertext and the value is of type
 HpkeCiphertext containing OIDs of the used KEM and KDF functions and the
 ciphertext enc1. The message has no protection and the extraCerts field contains
-the server KEM-certificate kemCertS.<a href="#section-5.1.3.4-13.2.8" class="pilcrow">¶</a></p>
+the server KEM-certificate kemCertS.<a href="#section-5.1.3.4-10.2.8" class="pilcrow">¶</a></p>
 </li>
-              <li id="section-5.1.3.4-13.3">
-                <p id="section-5.1.3.4-13.3.1">The PKI entity validates the server certificate kemCertS.<a href="#section-5.1.3.4-13.3.1" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.3.2">
+              <li id="section-5.1.3.4-10.3">
+                <p id="section-5.1.3.4-10.3.1">The PKI entity validates the server certificate kemCertS.<a href="#section-5.1.3.4-10.3.1" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.3.2">
 The PKI entity concatenates the transactionID and senderNonce genm_senderNonce
-from the PKIHeader of the initial genm message to context1 as described above.<a href="#section-5.1.3.4-13.3.2" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.3.3">
+from the PKIHeader of the initial genm message to context1 as described above.<a href="#section-5.1.3.4-10.3.2" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.3.3">
 It decapsulates the shared secret ss1 from the ciphertext enc1 using the
-HPKE export function ReceiveExportBase and its private key skC:<a href="#section-5.1.3.4-13.3.3" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-13.3.4">
+HPKE export function ReceiveExportBase and its private key skC:<a href="#section-5.1.3.4-10.3.3" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-10.3.4">
 <pre>
   ReceiveExportBase(enc1, skC, "round1", context1, L) = ss1
-</pre><a href="#section-5.1.3.4-13.3.4" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.3.4-10.3.4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.3.4-13.3.5">
+<p id="section-5.1.3.4-10.3.5">
 Note: If the decapsulation operation outputs an error, output a PKIFailureInfo
 badMessageCheck &lt; Q: Or addInfoNotAvailable or TBD badKemExchange ... &gt;,
-and terminate the PKI management operation.<a href="#section-5.1.3.4-13.3.5" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.3.6">
+and terminate the PKI management operation.<a href="#section-5.1.3.4-10.3.5" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.3.6">
 It concatenates the shared secret ss1, with the transactionID, the senderNonce
 genp_senderNonce, and the recipNonce genp_recipNonce from the PKIHeader of
-the received genp message to context2.<a href="#section-5.1.3.4-13.3.6" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-13.3.7">
+the received genp message to context2.<a href="#section-5.1.3.4-10.3.6" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-10.3.7">
 <pre>
   context2 = concat(ss1, transactionID, genp_senderNonce,
                     genp_recipNonce)
-</pre><a href="#section-5.1.3.4-13.3.7" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.3.4-10.3.7" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.3.4-13.3.8">
+<p id="section-5.1.3.4-10.3.8">
 It generates a shared secret ss2 and the associated ciphertext enc2 using
-the HPKE export function SendExportBase and the server's public key pkS:<a href="#section-5.1.3.4-13.3.8" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-13.3.9">
+the HPKE export function SendExportBase and the server's public key pkS:<a href="#section-5.1.3.4-10.3.8" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-10.3.9">
 <pre>
   SendExportBase(pkS, "round2", context2, L) = (enc2, ss2)
-</pre><a href="#section-5.1.3.4-13.3.9" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.3.4-10.3.9" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.3.4-13.3.10">
+<p id="section-5.1.3.4-10.3.10">
 Note: The shared secret ss2 is the shared symmetric key to be used for MAC-based
 protection of all subsequent messages of this PKI management operation. This
 construction for combining two KEM shared secrets by chaining two invocations
 of HPKE is at least as strong as the KEM combiner presented in
-<span>[<a href="#I-D.ounsworth-cfrg-kem-combiners" class="cite xref">I-D.ounsworth-cfrg-kem-combiners</a>]</span>, also see <a href="#sect-8.8" class="auto internal xref">Section 8.8</a> for further discussion.<a href="#section-5.1.3.4-13.3.10" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.3.11">
+<span>[<a href="#I-D.ounsworth-cfrg-kem-combiners" class="cite xref">I-D.ounsworth-cfrg-kem-combiners</a>]</span>, also see <a href="#sect-8.8" class="auto internal xref">Section 8.8</a> for further discussion.<a href="#section-5.1.3.4-10.3.10" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.3.11">
 The request message is of any type. The generalInfo field contains a InfoTypeAndValue
 element of type id-it-HpkeCiphertext and the value is of type HpkeCiphertext
 containing OIDs of the used KEM and KDF functions and the ciphertext enc2.
 The message has a MAC-based protection using the protectionAlg id-hpke-mac
-and the shared secret ss2.<a href="#section-5.1.3.4-13.3.11" class="pilcrow">¶</a></p>
+and the shared secret ss2.<a href="#section-5.1.3.4-10.3.11" class="pilcrow">¶</a></p>
 </li>
-              <li id="section-5.1.3.4-13.4">
-                <p id="section-5.1.3.4-13.4.1">PKI management entity concatenates the shared secret ss1, with the transactionID,
+              <li id="section-5.1.3.4-10.4">
+                <p id="section-5.1.3.4-10.4.1">PKI management entity concatenates the shared secret ss1, with the transactionID,
 the senderNonce genp_senderNonce, and the recipNonce genp_recipNonce from
-the PKIHeader of the received genp message to context2 as described above.<a href="#section-5.1.3.4-13.4.1" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-13.4.2">
+the PKIHeader of the received genp message to context2 as described above.<a href="#section-5.1.3.4-10.4.1" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-10.4.2">
 <pre>
   context2 = concat(ss1, transactionID, genp_senderNonce,
                     genp_recipNonce)
-</pre><a href="#section-5.1.3.4-13.4.2" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.3.4-10.4.2" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.3.4-13.4.3">
+<p id="section-5.1.3.4-10.4.3">
 It decapsulates the shared secret ss2 from the ciphertext enc2 using the
-HPKE export function ReceiveExportBase and its private key skS:<a href="#section-5.1.3.4-13.4.3" class="pilcrow">¶</a></p>
-<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-13.4.4">
+HPKE export function ReceiveExportBase and its private key skS:<a href="#section-5.1.3.4-10.4.3" class="pilcrow">¶</a></p>
+<div class="lang-asn.1 sourcecode" id="section-5.1.3.4-10.4.4">
 <pre>
   ReceiveExportBase(enc2, skC, "round2", context2, L) = ss2
-</pre><a href="#section-5.1.3.4-13.4.4" class="pilcrow">¶</a>
+</pre><a href="#section-5.1.3.4-10.4.4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.1.3.4-13.4.5">
+<p id="section-5.1.3.4-10.4.5">
 Note: If the decapsulation operation outputs an error, output a PKIFailureInfo
 badMessageCheck &lt; Q: Or addInfoNotAvailable or TBD badKemExchange ... &gt;,
-and terminate the PKI management operation.<a href="#section-5.1.3.4-13.4.5" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.4.6">
+and terminate the PKI management operation.<a href="#section-5.1.3.4-10.4.5" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.4.6">
 It verifies the MAC-based protection and thus authenticates the PKI entity
-as sender of the request message.<a href="#section-5.1.3.4-13.4.6" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-13.4.7">
+as sender of the request message.<a href="#section-5.1.3.4-10.4.6" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-10.4.7">
 The response message has a MAC-based protection using the protectionAlg id-hpke-mac
-and the shared secret ss2.<a href="#section-5.1.3.4-13.4.7" class="pilcrow">¶</a></p>
+and the shared secret ss2.<a href="#section-5.1.3.4-10.4.7" class="pilcrow">¶</a></p>
 </li>
-              <li id="section-5.1.3.4-13.5">The PKI entity verifies the MAC-based protection and thus authenticates the
-PKI management entity as sender of the response message.<a href="#section-5.1.3.4-13.5" class="pilcrow">¶</a>
+              <li id="section-5.1.3.4-10.5">The PKI entity verifies the MAC-based protection and thus authenticates the
+PKI management entity as sender of the response message.<a href="#section-5.1.3.4-10.5" class="pilcrow">¶</a>
 </li>
             </ol>
-<p id="section-5.1.3.4-14">All potential further message of this PKI management operation make use of
-ss2 for MAC-based protection.<a href="#section-5.1.3.4-14" class="pilcrow">¶</a></p>
-<p id="section-5.1.3.4-15">&lt; ToDo: Review by co-authors needed. &gt;<a href="#section-5.1.3.4-15" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-11">All potential further message of this PKI management operation make use of
+ss2 for MAC-based protection.<a href="#section-5.1.3.4-11" class="pilcrow">¶</a></p>
+<p id="section-5.1.3.4-12">&lt; ToDo: Review by co-authors needed. &gt;<a href="#section-5.1.3.4-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sect-5.1.3.5">
@@ -5722,7 +5707,7 @@ Tomi Kause, and Tero Mononen, the original authors of <span>[<a href="#RFC4210" 
 <dd class="break"></dd>
 <dt id="I-D.ietf-lamps-lightweight-cmp-profile">[I-D.ietf-lamps-lightweight-cmp-profile]</dt>
         <dd>
-<span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, and <span class="refAuthor">S. Fries</span>, <span class="refTitle">"Lightweight Certificate Management Protocol (CMP) Profile"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-lightweight-cmp-profile-18</span>, <time datetime="2022-12-06" class="refDate">6 December 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-lightweight-cmp-profile-18">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-lightweight-cmp-profile-18</a>&gt;</span>. </dd>
+<span class="refAuthor">Brockhaus, H.</span>, <span class="refAuthor">von Oheimb, D.</span>, and <span class="refAuthor">S. Fries</span>, <span class="refTitle">"Lightweight Certificate Management Protocol (CMP) Profile"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-lightweight-cmp-profile-20</span>, <time datetime="2023-01-12" class="refDate">12 January 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-lightweight-cmp-profile-20">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-lightweight-cmp-profile-20</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-ace-cmpv2-coap-transport">[I-D.ietf-ace-cmpv2-coap-transport]</dt>
         <dd>

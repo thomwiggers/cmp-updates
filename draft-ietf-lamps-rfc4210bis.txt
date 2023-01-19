@@ -7,8 +7,8 @@ Internet-Draft                                             D. von Oheimb
 Obsoletes: 4210 (if approved)                                    Siemens
 Updates: 5912 (if approved)                                 M. Ounsworth
 Intended status: Standards Track                                 J. Gray
-Expires: 14 July 2023                                            Entrust
-                                                         10 January 2023
+Expires: 23 July 2023                                            Entrust
+                                                         19 January 2023
 
 
    Internet X.509 Public Key Infrastructure -- Certificate Management
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 July 2023.
+   This Internet-Draft will expire on 23 July 2023.
 
 Copyright Notice
 
@@ -1726,20 +1726,10 @@ Table of Contents
        -- Encrypted symmetric key from HPKE SendExportBase
      }
 
-   The object identifier used in protectionAlg for the MAC-based message
-   protection with HPKE-based key exchange is id-hpke-mac, which is
-   defined in this document as:
-
-     id-hpke-mac OBJECT IDENTIFIER ::= { TBD2 }
-
-   When id-hpke-mac is used, the parameters MUST employ the
-   HpkeMacParameter syntax.  The syntax for HpkeMacParameter is as
-   follows:
-
-     HpkeMacParameter ::= SEQUENCE {
-        mac                 AlgorithmIdentifier
-        -- the MAC AlgId
-     }
+   The messages protected using the key derived from the HPKE-exchanges
+   will contain a MAC value in PKIProtection and the protectionAlg MAY
+   be one of the options described in CMP Algorithms Section 6.2
+   [RFCCCCC].
 
    The message flow establishing a shared symmetric key consists of an
    additional genm/genp with no protection and the desired request/
@@ -3746,9 +3736,9 @@ Table of Contents
               Brockhaus, H., von Oheimb, D., and S. Fries, "Lightweight
               Certificate Management Protocol (CMP) Profile", Work in
               Progress, Internet-Draft, draft-ietf-lamps-lightweight-
-              cmp-profile-18, 6 December 2022,
+              cmp-profile-20, 12 January 2023,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              lightweight-cmp-profile-18>.
+              lightweight-cmp-profile-20>.
 
    [I-D.ietf-ace-cmpv2-coap-transport]
               Sahni, M. and S. Tripathi, "CoAP Transfer for the
