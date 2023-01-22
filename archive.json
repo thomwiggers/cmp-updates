@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-12-25T00:33:29.971154+00:00",
+  "timestamp": "2023-01-22T00:35:24.385964+00:00",
   "repo": "lamps-wg/cmp-updates",
   "labels": [
     {
@@ -62,25 +62,83 @@
       "labels": [],
       "body": "Antonio pointed me again at https://eprint.iacr.org/2017/634.pdf. \r\nIn figure 3 an authenticated key exchange protocol is described where both parties are authenticated. There P1 generates an ephemeral KEM key pair pk/sk and sends it together with of the encrypted value using P2's public KEM key to P2. In return P2 sends two encrypted values, one using the ephemeral public key pk and one using the public KEM key of P1. Finally all concatenate the three resulting keys using a hash function.\r\nShould we extend Section 5.1.3.4 accordingly also adding an ephemeral KEM key?",
       "createdAt": "2022-12-21T16:09:59Z",
-      "updatedAt": "2022-12-21T16:09:59Z",
+      "updatedAt": "2023-01-19T23:41:22Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Does anyone has an opinion?",
+          "createdAt": "2023-01-19T08:29:59Z",
+          "updatedAt": "2023-01-19T08:29:59Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Design team meeting minutes:\r\nWe submit the version of Section 5.1.3.4 with out the third HPKE and then ask on the LAMPS list if people think that we should add a third HPKE with an ephemeral KEM keypair to the exchange as proposed in figure 3 of the paper.",
+          "createdAt": "2023-01-19T17:16:11Z",
+          "updatedAt": "2023-01-19T17:23:31Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Design team meeting minutes:\r\nMike offered to read the paper and provide his opinion on this topic. ",
+          "createdAt": "2023-01-19T17:16:47Z",
+          "updatedAt": "2023-01-19T17:23:23Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Some things I note from the paper:\r\n\r\n> In key exchange constructions using a KEM, it is common\r\nto hash the \u201cview\u201d of each participant (i.e., all received and\r\nsent messages) into the final key\r\n\r\nShould we do that? That would be equivalent to the TLS \"transcript\". It might solve one of the problems we have with the client and server using different values for `HPKE.L`.",
+          "createdAt": "2023-01-19T23:15:41Z",
+          "updatedAt": "2023-01-19T23:15:41Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think this is the relevant sentence for the issue of adding a 3rd (ephemeral) KEM key to the handshake:\r\n\r\n> Concretely, security of Kyber.AKE in the Canetti\u2013\r\nKrawczyk model with weak forward secrecy [27] follows\r\nMy u\r\ndirectly from the generic security bounds of [22], [37]. (Note\r\nthat full forward secrecy is not achievable for a two-round\r\nauthenticated key-exchange protocol [27].)\r\n\r\n---\r\nI agree with that analysis. Here is my reasoning:\r\n\r\nConsider first a basic 2-key KEM AKE \r\n\r\n```\r\nStatic long-term KEM keys: (pk_c, priv_c), (pk_s, priv_s)\r\n\r\nClient:\r\n(c1, k1) <- KEM.encaps(pk_s)\r\n\r\nServer:\r\nk1 <- KEM.decaps(c1, priv_s)\r\n(c2, k2) <- KEM.encaps(pk_c)\r\n\r\nClient: \r\nk2 <- KEM.decaps(c2, priv_c)\r\n\r\nBoth:\r\nkey := H(k1, k2)\r\n```\r\n\r\nHere if an attacker records the traffic `c1, c2` and then is able to learn, even some time later, both parties' private keys `priv_s, priv_c`, then they can re-run the KEM.decaps()'s and recover both `k1, k2`, and then the final `key`.\r\n\r\nThis is, I believe, already an improvement over the current CMP KeyTrans or KeyAgree message protection where only the server's private key is required to decrypt the exchanged key.\r\n\r\nThe paper goes a step further by adding an ephemeral key (I believe it should be fine to add it to either party). This means that obtaining `key` requires knowledge of both long-term private keys, plus the ephemeral private key which is discarded at the end of the handshake. They claim this provides \"weak forward secrecy\". I think they are implying that \"full forward secrecy\" would require both parties to have ephemeral keys, which would require an extra 0.5 round-trip to exchange the 4th ciphertext.\r\n\r\n--- \r\nMy opinion is that Static-Static KEM AKE is already improved over KeyTrans or KeyAgree in CMP, but if it does not cost us anything to add an ephemeral key as described in the paper, then why not.\r\n\r\nI would feel more confident if everyone thinks about this and agrees with my logic ... including Hans Aschaur, who has an excellent mind for these crypto puzzles.\r\n",
+          "createdAt": "2023-01-19T23:39:33Z",
+          "updatedAt": "2023-01-19T23:41:22Z"
+        }
+      ]
     },
     {
       "number": 3,
       "id": "I_kwDOInbtzM5Z6paC",
       "title": "No need for `id-hpke-mac` and `HpkeMacParameter` nor for key identifiers",
       "url": "https://github.com/lamps-wg/cmp-updates/issues/3",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "DDvO",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
-      "body": "Currently, [section  5.1.3.4 ](https://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#section-5.1.3.4 ) contains the definitions\r\n\r\n> ```\r\n>   id-hpke-mac OBJECT IDENTIFIER ::= { TBD2 }\r\n> ```\r\n> When id-hpke-mac is used, the parameters MUST employ the HpkeMacParameter syntax. The syntax for HpkeMacParameter is as follows:\r\n> ```\r\n>   HpkeMacParameter ::= SEQUENCE {\r\n>      mac                 AlgorithmIdentifier\r\n>      -- the MAC AlgId\r\n>   }\r\n> ```\r\nI see no need for these.\r\n\r\nAny MAC-based message protection is sufficiently determined by the algorithm identifier of the MAC alg used for the given message and by (the selection of) the symmetric key being used. This general case is already covered by [section 5.1.3.1](https://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#name-shared-secret-information) and by the beginning of [section 5.1.1 ](https://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#name-pki-message-header) giving hints on how to address the symmetric key.\r\nFor instance, for the PBM defined in [RFC 4211 section 4.4](https://www.rfc-editor.org/rfc/rfc4211#section-4.4), the set of core algorithms and auxiliary values (such as the salt) used are encoded in a `PBMParameter` structure, and the shared secret may be implicit or determined by `sender` field, plus optionally the `senderKID` field, of the message header. This way, the message protection can be interpreted without further input/history.\r\nBTW, IMO it would be helpful if section 5.1.1 also mentioned how to determine the symmetric key being used, namely using the `sender` and `senderKID` message header fields.\r\n\r\nActually, the HPKE+MAC-based message protection is 'just' another special case of the MAC-based message protection very briefly described in section 5.1.3.1. So IMO all the text of  5.1.3.4 should better move there (strictly speaking, as a subsection of 5.1.3.1, but I'd say we can and should save the extra nesting).\r\n\r\nThe only special/new thing about this MAC method is how to arrive at the shared symmetric key.\r\nHere its is not a pre-shared one, but it is produced on-the-fly using a preparatory message exchange with the KEM cert and the respective KEM key pair of each party.\r\n\r\nWhen the first two messages have been exchanged, the symmetric 'session' key to use for MAC-protecting all further messages of the given transaction has been established. Note that because it is ephemeral, it cannot be (sufficiently) addressed by any static info such as the sender/recipient name and/or the sender/recipient cert or their subject key identifiers (SKID).\r\nTherefore, it does not really help to place the SKID anywhere in the message, be it as part of the `HpkeMacParameter` structure or as the the `senderKID` and `recipKID` message header fields.\r\n\r\nAnyway, the established symmetric 'session' key needs to be remembered by both parties as long as the transaction is active. Therefore, it must be stored along with their transaction contexts, and it is entirely sufficient to identify/address this symmetric 'session' key using the `transactionID`.\r\n\r\nThe fact that all messages starting with the third one are protected using a symmetric key established by then \r\nis implicitly clear for the rest of the transaction. So semantically there is no need to give any indication about this (such as `id-hpke-mac`) in the protected messages. OTOH, for technical reasons some protection alg identifier should be given, and it is most straightforward to place the MAC alg identifier directly in the `protectionAlg` field. (BTW, the sender of each message could even choose a different MAC algorithm each time, though this flexibility is not needed.)\r\n\r\nThus, for the reasons given, `id-hpke-mac` and `HpkeMacParameter` are not needed,\r\nneither do we need any way of further referencing the KEM certs and keys used in the first steps.",
+      "body": "Currently, [section  5.1.3.4 ](https://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#section-5.1.3.4 ) contains the definitions\r\n\r\n> ```\r\n>   id-hpke-mac OBJECT IDENTIFIER ::= { TBD2 }\r\n> ```\r\n> When id-hpke-mac is used, the parameters MUST employ the HpkeMacParameter syntax. The syntax for HpkeMacParameter is as follows:\r\n> ```\r\n>   HpkeMacParameter ::= SEQUENCE {\r\n>      mac                 AlgorithmIdentifier\r\n>      -- the MAC AlgId\r\n>   }\r\n> ```\r\nI see no need for these.\r\n\r\nAny MAC-based message protection is sufficiently determined by the algorithm identifier of the MAC alg used for the given message and by (the selection of) the symmetric key being used. This general case is already covered by [section 5.1.3.1](https://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#name-shared-secret-information) and by the beginning of [section 5.1.1 ](https://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#name-pki-message-header) giving hints on how to address the symmetric key.\r\nFor instance, for the PBM defined in [RFC 4211 section 4.4](https://www.rfc-editor.org/rfc/rfc4211#section-4.4), the set of core algorithms and auxiliary values (such as the salt) used are encoded in a `PBMParameter` structure, and the shared secret may be implicit or determined by `sender` field, plus optionally the `senderKID` field, of the message header. This way, the message protection can be interpreted without further input/history.\r\n[moved to #6:]~BTW, IMO it would be helpful if section 5.1.1 also mentioned how to determine the symmetric key being used, namely using the `sender` and `senderKID` message header fields.~\r\n\r\n[moved to #6:]~Actually, the HPKE+MAC-based message protection is 'just' another special case of the MAC-based message protection very briefly described in section 5.1.3.1. So IMO all the text of  5.1.3.4 should better move there (strictly speaking, as a subsection of 5.1.3.1, but I'd say we can and should save the extra nesting).~\r\n\r\nThe only special/new thing about this MAC method is how to arrive at the shared symmetric key.\r\nHere its is not a pre-shared one, but it is produced on-the-fly using a preparatory message exchange with the KEM cert and the respective KEM key pair of each party.\r\n\r\nWhen the first two messages have been exchanged, the symmetric 'session' key to use for MAC-protecting all further messages of the given transaction has been established. Note that because it is ephemeral, it cannot be (sufficiently) addressed by any static info such as the sender/recipient name and/or the sender/recipient cert or their subject key identifiers (SKID).\r\nTherefore, it does not really help to place the SKID anywhere in the message, be it as part of the `HpkeMacParameter` structure or as the the `senderKID` and `recipKID` message header fields.\r\n\r\nAnyway, the established symmetric 'session' key needs to be remembered by both parties as long as the transaction is active. Therefore, it must be stored along with their transaction contexts, and it is entirely sufficient to identify/address this symmetric 'session' key using the `transactionID`.\r\n\r\nThe fact that all messages starting with the third one are protected using a symmetric key established by then \r\nis implicitly clear for the rest of the transaction. So semantically there is no need to give any indication about this (such as `id-hpke-mac`) in the protected messages. OTOH, for technical reasons some protection alg identifier should be given, and it is most straightforward to place the MAC alg identifier directly in the `protectionAlg` field. (BTW, the sender of each message could even choose a different MAC algorithm each time, though this flexibility is not needed.)\r\n\r\nThus, for the reasons given, `id-hpke-mac` and `HpkeMacParameter` are not needed,\r\nneither do we need any way of further referencing the KEM certs and keys used in the first steps.",
       "createdAt": "2022-12-22T21:07:49Z",
-      "updatedAt": "2022-12-22T21:07:49Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2023-01-19T13:46:22Z",
+      "closedAt": "2023-01-19T13:46:21Z",
+      "comments": [
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "David, thank you for this issue.\r\nYou point at some additional issues unrelated to the topic in the tile. Please open separate issues, it makes it easier to separately discuss them. It confuses me to mx things. thank you.\r\n\r\nI support you proposal to directly use the MAC algorithm OID instead of id-hpke-mac in the protectionAlg field of the request message. I will provide an update of the text reflecting this change and we can possibly discuss it in the afternoon. ",
+          "createdAt": "2023-01-19T08:41:10Z",
+          "updatedAt": "2023-01-19T08:41:10Z"
+        },
+        {
+          "author": "DDvO",
+          "authorAssociation": "NONE",
+          "body": "> You point at some additional issues unrelated to the topic in the tilte. Please open separate issues, it makes it easier to separately discuss them. It confuses me to mix things. thank you.\r\n\r\nI noticed two such topics - done for them.\r\n \r\n> I support you proposal to directly use the MAC algorithm OID instead of id-hpke-mac in the protectionAlg field of the request message. I will provide an update of the text reflecting this change and we can possibly discuss it in the afternoon.\r\n\r\nPleased to hear.",
+          "createdAt": "2023-01-19T09:39:49Z",
+          "updatedAt": "2023-01-19T09:39:49Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Resolved in https://github.com/lamps-wg/cmp-updates/commit/ec4fa3e3b120a151a3448a0e17490957424b587c",
+          "createdAt": "2023-01-19T13:46:21Z",
+          "updatedAt": "2023-01-19T13:46:21Z"
+        }
+      ]
     },
     {
       "number": 4,
@@ -94,9 +152,31 @@
       "labels": [],
       "body": "How does the recipient of an `HpkeCiphertext` know/learn the value of  the length `L` that the sender chose in its call of `SendExportBase`, to be re-used in the `ReceiveExportBase` call of the recipient?",
       "createdAt": "2022-12-22T21:07:56Z",
-      "updatedAt": "2022-12-22T21:07:56Z",
+      "updatedAt": "2023-01-20T18:25:27Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "L is the output length of the KDF in byte and therefore the length of the secret derived from the HPKE. This secret will be used for MAC-based message protection using a MAC algorithm according to CMP Algorithms Section 6.2 https://datatracker.ietf.org/doc/html/draft-ietf-lamps-cmp-algorithms-15#section-6.2 . Therefore, I think, L is specified by the length of the symmetric key to be used by the MAC algorithm.\r\n@Mike, is this understanding correct, or do you think we need to explicitly specify L in the HpkeCiphertext?",
+          "createdAt": "2023-01-19T09:18:58Z",
+          "updatedAt": "2023-01-19T09:18:58Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Design team meeting minutes:\r\nI will add L to HpkeCiphertext and make enc optional.\r\nThe client needs to send an HpkeCiphertext  with kem, kdf, and L omitting enc in the first genm message.\r\nThe server should accept the L an include into the HpkeCiphertext  of the genp message.\r\nThe client must check that the L from genp is at least as large as the security level of the chosen MAC algorithm.",
+          "createdAt": "2023-01-19T17:19:19Z",
+          "updatedAt": "2023-01-19T17:23:01Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I mentioned in \\#2 that if we include the overall transcript in the final key derivation (as recommended in the Kyber paper), then that maybe solves the problem of the client and server using different L values.",
+          "createdAt": "2023-01-20T00:10:11Z",
+          "updatedAt": "2023-01-20T18:25:27Z"
+        }
+      ]
     },
     {
       "number": 5,
@@ -110,9 +190,128 @@
       "labels": [],
       "body": "[Section 5.1.3.4. ](https://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#section-5.1.3.4)[Key Encapsulation](https://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#name-key-encapsulation) uses both pairs of terms interchangeably.\r\n\r\nFor consistency, better stick to one of them. My preference, for simplicity, would be: client - server.\r\nThe terms \"client\" and \"server\" are those used also in, e.g., section 5.1.1, and various other places.",
       "createdAt": "2022-12-23T06:37:07Z",
-      "updatedAt": "2022-12-23T06:37:07Z",
+      "updatedAt": "2023-01-19T17:22:43Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "You are right, this is confusing.\r\nPKI entity and PKI management entity refer to the parties involved in the PKI management operation. We use these terms in the Lightweight CMP Profile. RFC4210 uses the terms end entity and PKI, CA, or RA. Client and server refer to the role in a single exchange where one has the client and one the server role. Client and server is also used in RFC 4210, but less often that end entity and PKI/CA/RA. Therefore, I tend to use end entity and PKI if the roles in the PKI management operation are meant. ",
+          "createdAt": "2023-01-19T09:35:02Z",
+          "updatedAt": "2023-01-19T09:35:02Z"
+        },
+        {
+          "author": "DDvO",
+          "authorAssociation": "NONE",
+          "body": "I just found that at least according to RFC 4210, \"PKI entity\" can mean any PKI component: CA, RA, or EE. \r\nSo certainly better to use \"end entity\" and \"PKI\" than \"PKI entity\".\r\n\r\nYet regarding the HPKE-baesd message flow described in 5.1.3.4,\r\nthis is not actually confined to EE - PKI communication: it can be used also, e.g., between (L)RA and RA, or RA and CA.\r\nSo also for this generality I propose to use \"client\" and \"server\" here and to mention that the client usually is an EE and the server a PKI management entity.",
+          "createdAt": "2023-01-19T09:53:56Z",
+          "updatedAt": "2023-01-19T09:53:56Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> this is not actually confined to EE - PKI communication: it can be used also, e.g., between (L)RA and RA, or RA and CA.\r\n\r\nThis is why I used PKI entity here instead of end entity, as it can be the EE, RA, or CA, as you stated above.",
+          "createdAt": "2023-01-19T14:20:55Z",
+          "updatedAt": "2023-01-19T14:20:55Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I could add (client) and (server) in Figure 2 like\r\n\r\nStep# PKI entity (client)                  PKI management entity (server)\r\n\r\nfor clarification.",
+          "createdAt": "2023-01-19T14:24:13Z",
+          "updatedAt": "2023-01-19T14:24:13Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Design team meeting minutes:\r\nI will add a note right after Figure 2 to state that the PKI entity has kemCertC and the PKI management entity has kemCertS.\r\nI will also add PKI entity after the first occurrence of clinet with kemCertC and the same for PKI management entity. ",
+          "createdAt": "2023-01-19T17:21:38Z",
+          "updatedAt": "2023-01-19T17:22:43Z"
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOInbtzM5cUN9p",
+      "title": "Clarify in section 5.1.1 how to determine the symmetric key being used",
+      "url": "https://github.com/lamps-wg/cmp-updates/issues/6",
+      "state": "OPEN",
+      "author": "DDvO",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "[this issue has been carved out from #3]\r\n\r\nIt would be helpful if section 5.1.1 also mentioned how to determine the symmetric key being used, \r\nnamely using the `sender` and `senderKID` message header fields.",
+      "createdAt": "2023-01-19T09:34:22Z",
+      "updatedAt": "2023-01-19T17:22:29Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "There is already a ToDo in the text to add some content to the description of senderKID and recipKID. My proposal would be to use the subjectKID of the KEM certificates used by the end entity and the PKI.\r\nWhat do you think? ",
+          "createdAt": "2023-01-19T09:38:20Z",
+          "updatedAt": "2023-01-19T09:38:20Z"
+        },
+        {
+          "author": "DDvO",
+          "authorAssociation": "NONE",
+          "body": "> There is already a ToDo in the text to add some content to the description of senderKID and recipKID.\r\n\r\nYou mean `< ToDo: Possibly add a protection mechanism using KEM keys. >`?\r\n\r\nThe recipKID is not needed for KEM keys.\r\n\r\n> My proposal would be to use the subjectKID of the KEM certificates used by the end entity and the PKI. What do you think?\r\n\r\nSo you mean, to place in the `senderKID` field the subject key identifier (SKID) of the KEM cert used by the respective sender?\r\n\r\nCertainly it is preferable to use the SKID if it is available, so I support requiring its use in this case.\r\nYet note that RFC 5280 requires its presence in X.509v3 compliant certs only for CA certs.\r\nSo we should also mention somehow that the `sender` field may be used if needed. \r\nWhich is already stated by RFC 4210 (though not specifically for symmetric keys) and inherited in 5.1.1:\r\n\r\n> The sender field contains the name of the sender of the PKIMessage. This name (in conjunction with senderKID, if supplied) should be sufficient to indicate the key to use to verify the protection on the message. ",
+          "createdAt": "2023-01-19T10:16:28Z",
+          "updatedAt": "2023-01-19T10:16:28Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As we need two HPKE exchanges to establish a shared secret capable authenticating the server and the client, the KEM certificates of both sides are needed, like with D-H. Therefore, I think we need to use both senderKID and recipKID.\r\nWe can discuss later in our meeting.",
+          "createdAt": "2023-01-19T14:08:55Z",
+          "updatedAt": "2023-01-19T14:13:06Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Design team meeting minutes:\r\nThis issue was not discussed.",
+          "createdAt": "2023-01-19T17:22:28Z",
+          "updatedAt": "2023-01-19T17:22:28Z"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "I_kwDOInbtzM5cUPGj",
+      "title": "Move all of section 5.1.3.4 into section 5.1.3.1 ?",
+      "url": "https://github.com/lamps-wg/cmp-updates/issues/7",
+      "state": "CLOSED",
+      "author": "DDvO",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "[this issue was carved out of #3]\r\n\r\nThe HPKE+MAC-based message protection is 'just' another special case of the MAC-based message protection very briefly described in section 5.1.3.1. So IMO all the text of 5.1.3.4 should better move there (strictly speaking, as a subsection of 5.1.3.1, but I'd say we can and should save the extra nesting).",
+      "createdAt": "2023-01-19T09:38:07Z",
+      "updatedAt": "2023-01-19T14:12:13Z",
+      "closedAt": "2023-01-19T14:12:12Z",
+      "comments": [
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Currently Section 5.1.3 is structured based on the keys to use for message protection. Here we use KEM keys for message protection and only use a symmetric key indirectly, like with Diffie-Hellmann in Section 5.1.3.2. I would propose to rename Section 5.1.3.1 to focus it more on pre-shared keys and passwords and keep the protection using KEM keys in Section 5.1.3.4.",
+          "createdAt": "2023-01-19T09:43:38Z",
+          "updatedAt": "2023-01-19T09:43:38Z"
+        },
+        {
+          "author": "DDvO",
+          "authorAssociation": "NONE",
+          "body": "Sounds good to me.",
+          "createdAt": "2023-01-19T10:18:49Z",
+          "updatedAt": "2023-01-19T10:18:49Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Resolved with https://github.com/lamps-wg/cmp-updates/commit/92bacd31fa196e317930b6e2197c3f3673dd75bd",
+          "createdAt": "2023-01-19T14:12:12Z",
+          "updatedAt": "2023-01-19T14:12:12Z"
+        }
+      ]
     }
   ],
   "pulls": [
