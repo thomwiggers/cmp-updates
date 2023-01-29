@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-01-22T00:35:24.385964+00:00",
+  "timestamp": "2023-01-29T00:37:02.000114+00:00",
   "repo": "lamps-wg/cmp-updates",
   "labels": [
     {
@@ -62,7 +62,7 @@
       "labels": [],
       "body": "Antonio pointed me again at https://eprint.iacr.org/2017/634.pdf. \r\nIn figure 3 an authenticated key exchange protocol is described where both parties are authenticated. There P1 generates an ephemeral KEM key pair pk/sk and sends it together with of the encrypted value using P2's public KEM key to P2. In return P2 sends two encrypted values, one using the ephemeral public key pk and one using the public KEM key of P1. Finally all concatenate the three resulting keys using a hash function.\r\nShould we extend Section 5.1.3.4 accordingly also adding an ephemeral KEM key?",
       "createdAt": "2022-12-21T16:09:59Z",
-      "updatedAt": "2023-01-19T23:41:22Z",
+      "updatedAt": "2023-01-26T16:48:09Z",
       "closedAt": null,
       "comments": [
         {
@@ -99,6 +99,20 @@
           "body": "I think this is the relevant sentence for the issue of adding a 3rd (ephemeral) KEM key to the handshake:\r\n\r\n> Concretely, security of Kyber.AKE in the Canetti\u2013\r\nKrawczyk model with weak forward secrecy [27] follows\r\nMy u\r\ndirectly from the generic security bounds of [22], [37]. (Note\r\nthat full forward secrecy is not achievable for a two-round\r\nauthenticated key-exchange protocol [27].)\r\n\r\n---\r\nI agree with that analysis. Here is my reasoning:\r\n\r\nConsider first a basic 2-key KEM AKE \r\n\r\n```\r\nStatic long-term KEM keys: (pk_c, priv_c), (pk_s, priv_s)\r\n\r\nClient:\r\n(c1, k1) <- KEM.encaps(pk_s)\r\n\r\nServer:\r\nk1 <- KEM.decaps(c1, priv_s)\r\n(c2, k2) <- KEM.encaps(pk_c)\r\n\r\nClient: \r\nk2 <- KEM.decaps(c2, priv_c)\r\n\r\nBoth:\r\nkey := H(k1, k2)\r\n```\r\n\r\nHere if an attacker records the traffic `c1, c2` and then is able to learn, even some time later, both parties' private keys `priv_s, priv_c`, then they can re-run the KEM.decaps()'s and recover both `k1, k2`, and then the final `key`.\r\n\r\nThis is, I believe, already an improvement over the current CMP KeyTrans or KeyAgree message protection where only the server's private key is required to decrypt the exchanged key.\r\n\r\nThe paper goes a step further by adding an ephemeral key (I believe it should be fine to add it to either party). This means that obtaining `key` requires knowledge of both long-term private keys, plus the ephemeral private key which is discarded at the end of the handshake. They claim this provides \"weak forward secrecy\". I think they are implying that \"full forward secrecy\" would require both parties to have ephemeral keys, which would require an extra 0.5 round-trip to exchange the 4th ciphertext.\r\n\r\n--- \r\nMy opinion is that Static-Static KEM AKE is already improved over KeyTrans or KeyAgree in CMP, but if it does not cost us anything to add an ephemeral key as described in the paper, then why not.\r\n\r\nI would feel more confident if everyone thinks about this and agrees with my logic ... including Hans Aschaur, who has an excellent mind for these crypto puzzles.\r\n",
           "createdAt": "2023-01-19T23:39:33Z",
           "updatedAt": "2023-01-19T23:41:22Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> The paper goes a step further by adding an ephemeral key (I believe it should be fine to add it to either party). This means that obtaining `key` requires knowledge of both long-term private keys, plus the ephemeral private key which is discarded at the end of the handshake. They claim this provides \"weak forward secrecy\". I think they are implying that \"full forward secrecy\" would require both parties to have ephemeral keys, which would require an extra 0.5 round-trip to exchange the 4th ciphertext.\r\n\r\nI am uncertain if an extra 0.5 round-trip would be required as the client could include its ephemeral public KEM key in the first genm messages together with its certificate. The first message exchange is unprotected, but I think a man-in-the-middle could exchange the ephemeral key, but this would also brake the establishment of the shared key later on.\r\n \r\n> My opinion is that Static-Static KEM AKE is already improved over KeyTrans or KeyAgree in CMP, but if it does not cost us anything to add an ephemeral key as described in the paper, then why not.\r\n\r\nAs of now [authkem ](https://github.com/claucece/draft-celi-wiggers-tls-authkem)dose not include a third ephemeral KEM key as well. But I see your point.\r\nWhat doe the implementer think about this? Is it cumbersome to add a third HPKE with an ephemeral KEM key to the exchange?",
+          "createdAt": "2023-01-26T16:43:14Z",
+          "updatedAt": "2023-01-26T16:43:14Z"
+        },
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Some things I note from the paper:\r\n> \r\n> > In key exchange constructions using a KEM, it is common\r\n> > to hash the \u201cview\u201d of each participant (i.e., all received and\r\n> > sent messages) into the final key\r\n> \r\n> Should we do that? That would be equivalent to the TLS \"transcript\". It might solve one of the problems we have with the client and server using different values for `HPKE.L`.\r\n\r\nWhat do the implementers think, would it be much harder to incorporate a hash on the PKIMessage into the HPKE Send/RecieveExportBase than only incorporating transactionID, senderNonce, and recipNonce? ",
+          "createdAt": "2023-01-26T16:48:08Z",
+          "updatedAt": "2023-01-26T16:48:08Z"
         }
       ]
     },
@@ -310,6 +324,46 @@
           "body": "Resolved with https://github.com/lamps-wg/cmp-updates/commit/92bacd31fa196e317930b6e2197c3f3673dd75bd",
           "createdAt": "2023-01-19T14:12:12Z",
           "updatedAt": "2023-01-19T14:12:12Z"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOInbtzM5c3axo",
+      "title": "Using SetupBase+KDF instead of SendExportBase",
+      "url": "https://github.com/lamps-wg/cmp-updates/issues/8",
+      "state": "OPEN",
+      "author": "HBrock",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://datatracker.ietf.org/doc/html/draft-celi-wiggers-tls-authkem-01#section-3.1 uses SetupExport.\r\nhttps://lamps-wg.github.io/cmp-updates/draft-ietf-lamps-rfc4210bis.html#section-5.1.3.4 uses SendExportBase.\r\nAre there reasons for using SetupExport + KDF instead of SendExportBase?",
+      "createdAt": "2023-01-26T11:59:52Z",
+      "updatedAt": "2023-01-26T11:59:52Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOInbtzM5c3cA1",
+      "title": "Is there a planning for adding a Kyber profile to HPKE",
+      "url": "https://github.com/lamps-wg/cmp-updates/issues/9",
+      "state": "OPEN",
+      "author": "HBrock",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://datatracker.ietf.org/doc/html/rfc9180#section-4.1 offers a DH profile for HPKE. Is there any activity ongoing to provide a Kyber based profile.",
+      "createdAt": "2023-01-26T12:04:11Z",
+      "updatedAt": "2023-01-26T16:19:41Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "HBrock",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@ounsworth could you ask this question at IETF116 CRFG meeting if you are on-site?",
+          "createdAt": "2023-01-26T16:19:41Z",
+          "updatedAt": "2023-01-26T16:19:41Z"
         }
       ]
     }
